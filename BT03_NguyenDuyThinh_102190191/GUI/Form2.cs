@@ -16,7 +16,6 @@ namespace BT03_NguyenDuyThinh_102190191
         public MyDel Sender;
         public delegate void refreshData();
         public refreshData refresh;
-
         string MSSV = "";
         private void getMSSV(string _MSSV)
         {
@@ -54,8 +53,7 @@ namespace BT03_NguyenDuyThinh_102190191
         }
         private void setStudent()
         {
-            SV s = new SV();
-            s = QLSV_BLL.Instance.getSVByMSSV_BLL(MSSV);
+            SV s = QLSV_BLL.Instance.getSVByMSSV_BLL(MSSV);
             tb_StudentID.Text = s.MSSV;
             tb_Name.Text = s.NameSV;
             if (s.Gender == true) rbtn_Male.Checked = true;
@@ -63,7 +61,6 @@ namespace BT03_NguyenDuyThinh_102190191
             dateTimePicker1.Value = s.NS;
             cbb_Class.SelectedIndex = s.ID_Lop - 1;
         }
-
         private void btn_Ok_Click(object sender, EventArgs e)
         {
             if (MSSV == "")
@@ -94,7 +91,11 @@ namespace BT03_NguyenDuyThinh_102190191
             refresh();
             this.Dispose();
         }
-
+        private void btn_Cancel_Click(object sender, EventArgs e)
+        {
+            refresh();
+            this.Dispose();
+        }
         private void Form2_Load(object sender, EventArgs e)
         {
             if (MSSV != "")
@@ -102,12 +103,6 @@ namespace BT03_NguyenDuyThinh_102190191
                 setStudent();
                 tb_StudentID.Enabled = false;
             }
-        }
-
-        private void btn_Cancel_Click(object sender, EventArgs e)
-        {
-            refresh();
-            this.Dispose();
         }
     }
 }

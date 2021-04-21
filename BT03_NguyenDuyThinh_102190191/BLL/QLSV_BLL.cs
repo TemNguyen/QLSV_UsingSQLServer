@@ -28,26 +28,7 @@ namespace BT03_NguyenDuyThinh_102190191
         private static QLSV_BLL _Instance;
         public DataTable getAllSV_BLL(int ID_Lop, string NameSV)
         {
-            DataTable dt = new DataTable();
-            dt.Columns.AddRange(new DataColumn[]
-            {
-                new DataColumn("MSSV"),
-                new DataColumn("NameSV"),
-                new DataColumn("Gender", typeof(bool)),
-                new DataColumn("NS", typeof(DateTime)),
-                new DataColumn("NameLop")
-            });
-            foreach(var i in QLSV_DAL.Instance.getAllSV_DAL(ID_Lop, NameSV))
-            {
-                DataRow dr = dt.NewRow();
-                dr["MSSV"] = i.MSSV;
-                dr["NameSV"] = i.NameSV;
-                dr["Gender"] = i.Gender;
-                dr["NS"] = i.NS;
-                dr["NameLop"] = QLSV_DAL.Instance.getNameLopByIDLop(i.ID_Lop);
-                dt.Rows.Add(dr);
-            }
-            return dt;
+            return ViewModel(QLSV_DAL.Instance.getAllSV_DAL(ID_Lop, NameSV));
         }
         public List<LopSH> getAllLSH_BLL()
         {
@@ -61,19 +42,11 @@ namespace BT03_NguyenDuyThinh_102190191
         {
             return QLSV_DAL.Instance.addSV_DAL(s);
         }
-        public SV getSVByMSSV_BLL(string MSSV)
-        {
-            return QLSV_DAL.Instance.getSVByMSSV_DAL(MSSV);
-        }
-        public bool setSVByMSSV_BLL(SV s)
-        {
-            return QLSV_DAL.Instance.setSVByMSSV_DAL(s);
-        }
         public bool deleteSVByMSSV_BLL(string MSSV)
         {
             return QLSV_DAL.Instance.deleteSVByMSSV_DAL(MSSV);
         }
-        public DataTable sortSVBy_BLL(List<SV> s, string property)
+        public DataTable sortSVBy_BLL(List<SV> SVs, string property)
         {
             Compare cmp;
             switch (property)
@@ -90,25 +63,45 @@ namespace BT03_NguyenDuyThinh_102190191
                 case "NS":
                     cmp = SV.cmpNS;
                     break;
-                case "ID_Lop":
+                case "NameLop":
                     cmp = SV.cmpID_Lop;
                     break;
                 default:
                     cmp = SV.cmpMSSV;
                     break;
             }
-            for (int i = 0; i < s.Count; i++)
+            for (int i = 0; i < SVs.Count; i++)
             {
-                for (int j = i + 1; j < s.Count; j++)
+                for (int j = i + 1; j < SVs.Count; j++)
                 {
-                    if(cmp(s[i], s[j]))
+                    if(cmp(SVs[i], SVs[j]))
                     {
-                        SV temp = s[i];
-                        s[i] = s[j];
-                        s[j] = temp;
+                        SV temp = SVs[i];
+                        SVs[i] = SVs[j];
+                        SVs[j] = temp;
                     }
                 }
             }
+            return ViewModel(SVs);
+        }
+        public SV getSVByMSSV_BLL(string MSSV)
+        {
+            return QLSV_DAL.Instance.getSVByMSSV_DAL(MSSV);
+        }
+        public bool setSVByMSSV_BLL(SV SVs)
+        {
+            return QLSV_DAL.Instance.setSVByMSSV_DAL(SVs);
+        }
+        public List<SV> getListSVByListMSSV_BLL(List<string> list)
+        {
+            return QLSV_DAL.Instance.getListSVByListMSSV_DAL(list);
+        }
+        public bool isExistMSSV_BLL(string MSSV)
+        {
+            return QLSV_DAL.Instance.isExistMSSV_DAL(MSSV);
+        }
+        private DataTable ViewModel(List<SV> SVs)
+        {
             DataTable dt = new DataTable();
             dt.Columns.AddRange(new DataColumn[]
             {
@@ -118,25 +111,17 @@ namespace BT03_NguyenDuyThinh_102190191
                 new DataColumn("NS", typeof(DateTime)),
                 new DataColumn("NameLop")
             });
-            foreach (var i in s)
+            foreach (var sv in SVs)
             {
                 DataRow dr = dt.NewRow();
-                dr["MSSV"] = i.MSSV;
-                dr["NameSV"] = i.NameSV;
-                dr["Gender"] = i.Gender;
-                dr["NS"] = i.NS;
-                dr["NameLop"] = QLSV_DAL.Instance.getNameLopByIDLop(i.ID_Lop);
+                dr["MSSV"] = sv.MSSV;
+                dr["NameSV"] = sv.NameSV;
+                dr["Gender"] = sv.Gender;
+                dr["NS"] = sv.NS;
+                dr["NameLop"] = QLSV_DAL.Instance.getNameLopByIDLop_DAL(sv.ID_Lop);
                 dt.Rows.Add(dr);
             }
             return dt;
-        }
-        public List<SV> getListSVByListMSSV_BLL(List<string> list)
-        {
-            return QLSV_DAL.Instance.getListSVByListMSSV_DAL(list);
-        }
-        public bool isExistMSSV_BLL(string MSSV)
-        {
-            return QLSV_DAL.Instance.isExistMSSV_DAL(MSSV);
         }
     }
 }
